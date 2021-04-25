@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { StudentsController } = require('../controllers/index')
 
-// get student
+// get students
 router.get('/students', StudentsController.getAll)
 
 // get student by id

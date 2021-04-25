@@ -1,37 +1,40 @@
 const { StudentModel } = require('../models/index')
 
 class StudentsController {
-    async getAll(req, res) {
-        try {
-            const students = await StudentModel.findAll()
+    getAll(req, res) {
+        
+        StudentModel.findAll()
+        .then(students => {
 
             if(!students){
                 res.status(404).json({
-                    message: 'not found',
-                    data: student
+                    message: 'Empty',
+                    data: students
                 })
             }
 
             res.status(200).json({
-                message: 'success',
+                message: 'Success',
                 data: students
             })
 
-        } catch (error) {
-            res.status(404).json({
+        })
+        .catch(error => {
+            res.status(500).json({
                 error
             })
-        }
+        })
+ 
     }
 
-    async getOne(req, res){
+    getOne(req, res){
+
         const { id } = req.params
-        try {
-            const student = await StudentModel.findOne({
-                where: {
-                    id
-                }
-            })
+        
+        StudentModel.findOne({
+            where: { id }
+        })
+        .then(student => {
 
             if(!student){
                 res.status(404).json({
@@ -39,87 +42,85 @@ class StudentsController {
                     data: student
                 })
             }
-
+    
             res.status(200).json({
                 message: 'success',
                 data: student
             })
-            
-        } catch (error) {
-            res.status(404).json({
+
+        })
+        .catch(error => {
+            res.status(500).json({
                 error
             })
-        }
+        })
+
     }
 
-    async store(req, res){
+    store(req, res){
+
         const { name, hobby, majors } = req.body
 
-        try {
-            
-            await StudentModel.create({
-                name, hobby, majors
-            })
-
+        StudentModel.create({
+            name, hobby, majors
+        })
+        .then(() => {
             res.status(201).json({
                 message: 'create data success'
             })
-
-        } catch (error) {
-            res.status(404).json({
+        })
+        .catch(error => [
+            res.status(500).json({
                 error
             })
-        }
+        ])
+
     }
 
-    async destroy(req, res){
-        const { id } = req.params
-        try {
-            
-            await StudentModel.destroy({
-                where: {
-                    id
-                }
-            })
+    destroy(req, res){
 
+        const { id } = req.params
+
+        StudentModel.destroy({
+            where: { id }
+        })
+        .then((result) => {
+            console.log(result)
             res.status(200).json({
                 message: 'delete data success'
             })
-
-        } catch (error) {
-            res.status(404).json({
+        })
+        .catch(error => {
+            res.status(500).json({
                 error
             })
-        }
+        })
+        
     }
     
-    async update(req, res){
+    update(req, res){
+
         const { id } = req.params
         const { name, hobby, majors } = req.body
 
-        try {
-
-            await StudentModel.update(
-            {
-                name, 
-                majors, 
-                hobby
-            },
-            {
-                where: {
-                    id
-                }
-            })
-
+        StudentModel.update({
+            name, 
+            majors, 
+            hobby
+        },{
+            where: { id }
+        })
+        .then(() => {
             res.status(200).json({
                 message: 'update data success'
             })
-
-        } catch (error) {
-            res.status(404).json({
+        })
+        .catch(error => {
+            res.status(500).json({
                 error
             })
-        }
+        })
+
     }
 }
 
